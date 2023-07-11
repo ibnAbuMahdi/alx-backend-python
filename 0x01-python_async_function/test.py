@@ -1,23 +1,16 @@
 #!/usr/bin/env python3
 from typing import List
 import asyncio
-import random
+wait_random = __import__('0-basic_async_syntax').wait_random
 
-async def async_rout() -> float:
-    """Async routine that returns a random number as a delay"""
-    delay = random.uniform(0, 10)
-    await asyncio.sleep(delay)
-    return delay
 
-async def call_async_rout() -> List[float]:
-    """Async routine that calls async_rout() three times"""
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    tasks = [wait_random(max_delay) for _ in range(n)]
     results = []
-
-    tasks = [async_rout() for _ in range(3)]
-    for task in asyncio.as_completed(tasks):
-        result = await task
-        results.append(result)
-        print(result)
-
+    while tasks:
+        done, tasks = await asyncio.wait(tasks,
+                                         return_when=asyncio.FIRST_COMPLETED)
+        for task in done:
+            result = await task
+            results.append(result)
     return results
-
