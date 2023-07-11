@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" 4-tasks """
 from typing import List
 import asyncio
 wait = __import__('3-tasks').task_wait_random
