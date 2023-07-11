@@ -5,6 +5,7 @@ wait = __import__('3-tasks').task_wait_random
 
 
 async def task_wait_n(n: int, max_delay: int) -> List[float]:
+    """ wait for tasks """
     tasks = [wait(max_delay) for _ in range(n)]
     results = []
     while tasks:
