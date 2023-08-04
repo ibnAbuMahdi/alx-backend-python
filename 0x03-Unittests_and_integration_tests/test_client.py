@@ -53,7 +53,12 @@ class TestGithubOrgClient(TestCase):
         self.assertEqual(GithubOrgClient.has_license(repo, lkey), expd)
 
 
-@parameterized_class([{"PAYLOAD": TEST_PAYLOAD}])
+@parameterized_class([
+        {"org_payload": TEST_PAYLOAD[0][0],
+         "repos_payload": TEST_PAYLOAD[0][1],
+         "expected_repos": TEST_PAYLOAD[0][2],
+         "apache2_repos": TEST_PAYLOAD[0][3]}
+        ])
 class TestIntegrationGithubOrgClient(TestCase):
     """ class for integration testing """
 
@@ -71,12 +76,12 @@ class TestIntegrationGithubOrgClient(TestCase):
     def test_public_repos(self) -> None:
         """ tests for public repos method """
         gc: GithubOrgClient = GithubOrgClient('google')
-        self.assertEqual(gc.public_repos(), self.PAYLOAD[0][2])
+        self.assertEqual(gc.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self) -> None:
         """ tests public repos with license """
         gc: GithubOrgClient = GithubOrgClient('google')
-        self.assertEqual(gc.public_repos("apache-2.0"), self.PAYLOAD[0][3])
+        self.assertEqual(gc.public_repos("apache-2.0"), self.apache2_repos)
 
 
 def s_effect(url: str) -> Any:
