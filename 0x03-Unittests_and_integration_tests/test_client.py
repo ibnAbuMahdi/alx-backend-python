@@ -63,13 +63,13 @@ class TestIntegrationGithubOrgClient(TestCase):
     """ class for integration testing """
 
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls: TestIntegrationGithubOrgClient) -> None:
         """ the setup class method """
         cls.get_patcher = patch('requests.get', side_effect=s_effect)
         cls.get_patcher.start()
 
     @classmethod
-    def tearDownClass(cls) -> None:
+    def tearDownClass(cls: TestIntegrationGithubOrgClient) -> None:
         """ the tear down class method """
         cls.get_patcher.stop()
 
