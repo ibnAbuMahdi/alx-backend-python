@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ test client module """
 from unittest import (TestCase, mock)
-from unittest.mock import patch
+from unittest.mock import (patch, Mock)
 from utils import (get_json, access_nested_map, memoize)
 from client import (GithubOrgClient)
 from typing import (Mapping, Sequence, Any)
@@ -60,8 +60,7 @@ class TestIntegrationGithubOrgClient(TestCase):
     @classmethod
     def setUpClass(cls):
         """ the setup class method """
-        cls.get_patcher = mock.patch('requests.get')
-        cls.get_patcher.return_value.json.side_effect = cls.s_effect
+        cls.get_patcher = patch('requests.get', side_effect=s_effect)
         cls.get_patcher.start()
 
     @classmethod
@@ -77,13 +76,14 @@ class TestIntegrationGithubOrgClient(TestCase):
     def test_public_repos_with_license(self) -> None:
         """ tests public repos with license """
         gc: GithubOrgClient = GithubOrgClient('google')
-        self.assertEqual(gc.public_repos(), self.PAYLOAD[0][3])
+        self.assertEqual(gc.public_repos("apache-2.0"), self.PAYLOAD[0][3])
 
-    def s_effect(self, url: str) -> Any:
-        """ side effect function """
-        repos_url = "https://api.github.com/orgs/google/repos"
-        org_url = "https://api.github.com/orgs/google"
-        if url == repos_url:
-            return self.PAYLOAD[0][0]
-        else:
-            return self.PAYLOAD[0][1]
+
+def s_effect(url: str) -> Any:
+    """ side effect function """
+    repos_url = "https://api.github.com/orgs/google/repos"
+    org_url = "https://api.github.com/orgs/google"
+    if url == repos_url:
+        return Mock(json=Mock(return_value=TEST_PAYLOAD[0][1]))
+    elif url == org_url:
+        return Mock(json=Mock(return_value=TEST_PAYLOAD[0][0]))
