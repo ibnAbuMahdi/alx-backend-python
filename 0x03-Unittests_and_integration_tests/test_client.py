@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ test client module """
 from unittest import (TestCase, mock)
+from unittest.mock import patch
 from utils import (get_json, access_nested_map, memoize)
 from client import (GithubOrgClient)
 from typing import (Mapping, Sequence, Any)
@@ -31,7 +32,7 @@ class TestGithubOrgClient(TestCase):
             gc = GithubOrgClient("google")
             self.assertEqual(gc._public_repos_url, "http://some.url")
 
-    @mock.patch('client.get_json', return_value=[{"name": "A"}, {"name": "B"}])
+    @patch('client.get_json', return_value=[{"name": "A"}, {"name": "B"}])
     def test_public_repos(self, mjson: mock.Mock) -> None:
         """ tests public repos and more patching """
         with mock.patch('client.GithubOrgClient._public_repos_url',
