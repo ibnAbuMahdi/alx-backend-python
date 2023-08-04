@@ -31,10 +31,9 @@ class TestGithubOrgClient(TestCase):
             gc = GithubOrgClient("google")
             self.assertEqual(gc._public_repos_url, "http://some.url")
 
-    @mock.patch('client.get_json')
+    @mock.patch('client.get_json', return_value=[{"name": "A"}, {"name": "B"}])
     def test_public_repos(self, mjson: mock.Mock) -> None:
         """ tests public repos and more patching """
-        mjson.return_value = [{"name": "A"}, {"name": "B"}]
         with mock.patch('client.GithubOrgClient._public_repos_url',
                         new_callable=mock.PropertyMock,
                         return_value="http://some.url") as mr:
