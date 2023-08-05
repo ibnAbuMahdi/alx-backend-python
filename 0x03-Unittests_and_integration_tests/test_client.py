@@ -63,14 +63,14 @@ class TestIntegrationGithubOrgClient(TestCase):
     """ class for integration testing """
 
     @classmethod
-    def setUpClass(cls: TestIntegrationGithubOrgClient) -> None:
-        """ the setup class method """
+    def setUpClass(cls) -> None:
+        """ set up the mocks and start the patcher """
         cls.get_patcher = patch('requests.get', side_effect=s_effect)
         cls.get_patcher.start()
 
     @classmethod
-    def tearDownClass(cls: TestIntegrationGithubOrgClient) -> None:
-        """ the tear down class method """
+    def tearDownClass(cls) -> None:
+        """ stop the running patcher """
         cls.get_patcher.stop()
 
     def test_public_repos(self) -> None:
